@@ -9,26 +9,27 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="theme-color" content="#0f7b5f">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
-:root{--bg:#f4f7f6;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#dbe3e0;--acc:#0f7b5f;--accink:#fff;--red:#c62f2f;--amb:#c77d00;--gray:#6b7280;--redbg:#fdeaea;--ambbg:#fff3dc;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f4f7f6;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#dbe3e0;--acc:#0f7b5f;--accink:#fff;--red:#c62f2f;--amb:#c77d00;--gray:#6b7280;--redbg:#fdeaea;--ambbg:#fff3dc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1715;--card:#18221f;--ink:#e8f0ed;--mute:#9aaba5;--line:#2a3a35;--acc:#3fbf9a;--accink:#06201a;--red:#ff7a7a;--amb:#f0b34a;--gray:#9ca3af;--redbg:#3a1d1d;--ambbg:#3a2d12;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#0f1715;--card:#18221f;--ink:#e8f0ed;--mute:#9aaba5;--line:#2a3a35;--acc:#3fbf9a;--accink:#06201a;--red:#ff7a7a;--amb:#f0b34a;--gray:#9ca3af;--redbg:#3a1d1d;--ambbg:#3a2d12;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:560px;margin:0 auto;padding:14px 14px 90px}
+main{max-width:560px;margin:0 auto;padding:14px 14px 100px}
 h1{font-size:22px;margin:4px 0 2px}
+h2{font-size:17px;margin:16px 0 4px}
 .sub{color:var(--mute);font-size:14px;margin:0 0 12px}
-.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
 .sum div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
 .sum b{display:block;font-size:24px}
 .sum span{font-size:12px;color:var(--mute)}
+.risk{background:var(--redbg);color:var(--red);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-weight:600}
+.risk small{display:block;font-weight:400;color:var(--mute)}
 .tabs{display:flex;gap:6px;margin-bottom:10px}
-.tabs button{flex:1;padding:10px 4px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-size:14px}
+.tabs button{flex:1;padding:10px 2px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-size:13px}
 .tabs button.on{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:600}
-input[type=search],input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;margin-top:4px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;margin-top:4px}
 label{display:block;font-size:14px;color:var(--mute);margin-top:10px}
 .item{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--gray);border-radius:10px;padding:10px 12px;margin:8px 0}
 .item.red{border-left-color:var(--red)}.item.amb{border-left-color:var(--amb)}.item.ok{border-left-color:var(--acc)}
@@ -46,9 +47,12 @@ label{display:block;font-size:14px;color:var(--mute);margin-top:10px}
 .sheet .in{max-width:560px;margin:0 auto}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .empty{text-align:center;color:var(--mute);padding:30px 10px}
+.grp{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:14px 0 4px}
+.grp h2{margin:0}
 details{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 summary{font-weight:600}
 textarea{min-height:90px}
+.wsrow{border-top:1px solid var(--line);margin-top:10px;padding-top:6px}
 </style>
 </head>
 <body>
@@ -60,27 +64,33 @@ textarea{min-height:90px}
     <div><b id="nAmb">0</b><span>Near expiry</span></div>
     <div><b id="nAll">0</b><span>Watching</span></div>
   </div>
+  <div class="risk" id="risk" style="display:none"></div>
   <div class="tabs">
     <button id="t-alert" class="on">Alerts</button>
+    <button id="t-wh">By wholesaler</button>
     <button id="t-all">All</button>
-    <button id="t-done">Returned</button>
+    <button id="t-done">Done</button>
   </div>
   <input type="search" id="q" placeholder="Search medicine or wholesaler">
   <div id="list"></div>
 
-  <details>
+  <details id="setBox">
     <summary>Settings and backup</summary>
     <label>Near expiry alert starts (months before expiry)
-      <select id="setNear"><option value="3">3 months</option><option value="4">4 months</option></select>
+      <select id="setNear"><option value="3">3 months</option><option value="4">4 months</option><option value="5">5 months</option><option value="6">6 months</option></select>
     </label>
     <label>Return now alert starts (months before expiry)
       <select id="setUrg"><option value="1">1 month</option><option value="2">2 months</option><option value="3">3 months</option></select>
     </label>
+    <h2>Wholesaler settings</h2>
+    <p class="meta">Some wholesalers take returns only up to a set time before expiry. Set that here. Add a phone number to send the return list on WhatsApp.</p>
+    <div id="wsList"></div>
+    <h2>Backup</h2>
     <div class="row">
       <button class="btn" id="copyAlerts">Copy alert list</button>
       <button class="btn" id="copyBackup">Copy backup</button>
     </div>
-    <p class="meta">Tip: paste the alert list into iPhone Reminders or Notes. Copy a backup now and then and keep it in Notes.</p>
+    <p class="meta">Copy a backup now and then and keep it in Notes.</p>
     <label>Restore from backup (paste here)</label>
     <textarea id="restoreTxt" placeholder="Paste backup text"></textarea>
     <div class="row"><button class="btn" id="restoreBtn">Restore</button></div>
@@ -94,10 +104,14 @@ textarea{min-height:90px}
   <h1 id="formTitle">Add medicine</h1>
   <label>Medicine name<input id="f-name" autocomplete="off"></label>
   <div class="two">
-    <label>Quantity (strips or packs)<input id="f-qty" type="number" inputmode="numeric" min="0"></label>
+    <label>Quantity (strips)<input id="f-qty" type="number" inputmode="numeric" min="0"></label>
     <label>Batch number<input id="f-batch" autocomplete="off"></label>
   </div>
-  <label>Expiry date<input id="f-exp" type="date"></label>
+  <label>Expiry (month and year)<input id="f-exp" type="month"></label>
+  <div class="two">
+    <label>MRP per strip (Rs)<input id="f-mrp" type="number" inputmode="decimal" min="0"></label>
+    <label>Purchase rate per strip (Rs)<input id="f-rate" type="number" inputmode="decimal" min="0"></label>
+  </div>
   <label>Wholesaler name<input id="f-whole" list="wlist" autocomplete="off"></label>
   <datalist id="wlist"></datalist>
   <div class="two">
@@ -112,14 +126,29 @@ textarea{min-height:90px}
   </div>
 </div></div>
 
+<div class="sheet" id="rsheet"><div class="in">
+  <h1>Mark as returned</h1>
+  <p class="meta" id="rName"></p>
+  <label>Return date<input id="r-date" type="date"></label>
+  <label>Credit note
+    <select id="r-credit"><option>Waiting</option><option>Received</option><option>Not given</option></select>
+  </label>
+  <label>Amount returned (Rs)<input id="r-amt" type="number" inputmode="decimal" min="0"></label>
+  <div class="row">
+    <button class="btn p" id="rSave">Save</button>
+    <button class="btn" id="rCancel">Cancel</button>
+  </div>
+</div></div>
+
 <script>
 (function(){
 var KEY="expiryWatch.v1", SKEY="expiryWatch.settings";
-var items=[], st={near:4,urg:2}, tab="alert", editId=null;
+var items=[], st={near:4,urg:2,whs:{}}, tab="alert", editId=null, retId=null;
 function $(i){return document.getElementById(i)}
 function load(){
   try{var a=localStorage.getItem(KEY);if(a)items=JSON.parse(a)||[]}catch(e){items=[]}
   try{var s=localStorage.getItem(SKEY);if(s)st=Object.assign(st,JSON.parse(s))}catch(e){}
+  if(!st.whs)st.whs={};
 }
 function save(){
   try{localStorage.setItem(KEY,JSON.stringify(items));localStorage.setItem(SKEY,JSON.stringify(st))}catch(e){}
@@ -129,101 +158,170 @@ function idbOpen(cb){try{var r=indexedDB.open("expiryWatch",1);r.onupgradeneeded
 function idbSet(v){idbOpen(function(db){if(!db)return;try{db.transaction("kv","readwrite").objectStore("kv").put(v,"data")}catch(e){}})}
 function idbGet(cb){idbOpen(function(db){if(!db)return cb(null);try{var g=db.transaction("kv").objectStore("kv").get("data");g.onsuccess=function(){cb(g.result||null)};g.onerror=function(){cb(null)}}catch(e){cb(null)}})}
 function today(){var d=new Date();d.setHours(0,0,0,0);return d}
+function pad(x){return String(x).padStart(2,"0")}
+function todayIso(){var n=new Date();return n.getFullYear()+"-"+pad(n.getMonth()+1)+"-"+pad(n.getDate())}
 function daysLeft(iso){var p=iso.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);return Math.round((d-today())/864e5)}
+var MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmt(iso){if(!iso)return "";var p=iso.split("-");return +p[2]+" "+MN[+p[1]-1]+" "+p[0]}
+function fmtM(iso){var p=iso.split("-");return MN[+p[1]-1]+" "+p[0]}
+function rs(n){return "Rs "+Math.round(n).toLocaleString("en-IN")}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function nearFor(it){var w=st.whs[it.whole];return (w&&+w.months)||+st.near}
 function level(it){
   if(it.done)return "done";
   var d=daysLeft(it.exp);
   if(d<0)return "expired";
-  if(d<=st.urg*30)return "red";
-  if(d<=st.near*30)return "amb";
+  var near=nearFor(it), urg=Math.min(+st.urg,near);
+  if(d<=urg*30)return "red";
+  if(d<=near*30)return "amb";
   return "ok";
 }
-function fmt(iso){if(!iso)return "";var p=iso.split("-");var m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return +p[2]+" "+m[+p[1]-1]+" "+p[0]}
-function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function isAlert(it){var l=level(it);return l==="red"||l==="amb"||l==="expired"}
+function val(it){return (+it.qty||0)*(+it.rate||0)}
 function left(it){
   var d=daysLeft(it.exp);
-  if(d<0)return "Expired "+(-d)+" days ago";
-  if(d===0)return "Expires today";
+  if(d<0)return "expired "+(-d)+" days ago";
+  if(d===0)return "expires today";
   if(d<45)return d+" days left";
   return Math.round(d/30)+" months left";
 }
+function card(it){
+  var l=level(it), cls=l==="expired"?"red":l, label, b="";
+  if(l==="done")label=it.soldOut?["gray","Sold out"]:["gray","Returned"];
+  else if(l==="expired")label=["red","Expired"];
+  else if(l==="red")label=["red","Return now"];
+  else if(l==="amb")label=["amb","Near expiry"];
+  else label=["ok","Safe for now"];
+  var h='<div class="item '+(l==="done"?"":cls)+'"><h3>'+esc(it.name)+'</h3>'+
+    '<div class="meta">Expiry: '+fmtM(it.exp)+(l==="done"?"":" ("+left(it)+")")+'</div>'+
+    '<div class="meta">Qty: '+esc(it.qty||"-")+" strips"+(it.batch?" | Batch: "+esc(it.batch):"")+'</div>'+
+    '<div class="meta">MRP: '+(it.mrp?rs(it.mrp):"-")+" | Rate: "+(it.rate?rs(it.rate):"-")+(it.rate&&it.qty?" | Value: "+rs(val(it)):"")+'</div>'+
+    '<div class="meta">Wholesaler: '+esc(it.whole||"-")+'</div>'+
+    '<div class="meta">Bought: '+(fmt(it.pdate)||"-")+(it.ptime?" at "+esc(it.ptime):"")+'</div>'+
+    (it.note?'<div class="meta">Note: '+esc(it.note)+'</div>':"");
+  if(it.done&&it.ret)h+='<div class="meta">Returned on '+fmt(it.ret.date)+" | Credit note: "+esc(it.ret.credit)+(it.ret.amt?" | Amount: "+rs(it.ret.amt):"")+'</div>';
+  h+='<span class="badge '+label[0]+'">'+label[1]+'</span><div class="row">';
+  if(it.done)h+='<button class="btn" data-a="undo" data-id="'+it.id+'">Move back</button>';
+  else h+='<button class="btn p" data-a="ret" data-id="'+it.id+'">Mark returned</button><button class="btn" data-a="sold" data-id="'+it.id+'">Sold</button>';
+  h+='<button class="btn" data-a="edit" data-id="'+it.id+'">Edit</button><button class="btn d" data-a="del" data-id="'+it.id+'">Delete</button></div></div>';
+  return h;
+}
+function listText(arr,whName){
+  return "Return list"+(whName?" for "+whName:"")+":\n"+arr.map(function(i){
+    return "- "+i.name+(i.batch?" (Batch "+i.batch+")":"")+", "+(i.qty||"?")+" strips, expiry "+fmtM(i.exp)+(i.mrp?", MRP "+rs(i.mrp):"");
+  }).join("\n");
+}
+function sortExp(a,b){return a.exp<b.exp?-1:1}
 function render(){
   var act=items.filter(function(i){return !i.done});
-  $("nRed").textContent=act.filter(function(i){var l=level(i);return l==="red"||l==="expired"}).length;
-  $("nAmb").textContent=act.filter(function(i){return level(i)==="amb"}).length;
+  var al=act.filter(isAlert);
+  $("nRed").textContent=al.filter(function(i){var l=level(i);return l==="red"||l==="expired"}).length;
+  $("nAmb").textContent=al.filter(function(i){return level(i)==="amb"}).length;
   $("nAll").textContent=act.length;
-  ["alert","all","done"].forEach(function(t){$("t-"+t).className=(tab===t?"on":"")});
+  var risk=0,mrpv=0;al.forEach(function(i){risk+=val(i);mrpv+=(+i.qty||0)*(+i.mrp||0)});
+  var rb=$("risk");
+  if(risk>0||mrpv>0){rb.style.display="block";rb.innerHTML="Money at risk: "+rs(risk)+"<small>At MRP: "+rs(mrpv)+" | "+al.length+" medicines in alert</small>"}else rb.style.display="none";
+  ["alert","wh","all","done"].forEach(function(t){$("t-"+t).className=(tab===t?"on":"")});
   var q=$("q").value.trim().toLowerCase();
-  var rows=items.filter(function(i){
-    var l=level(i);
-    if(tab==="done"&&!i.done)return false;
-    if(tab!=="done"&&i.done)return false;
-    if(tab==="alert"&&!(l==="red"||l==="amb"||l==="expired"))return false;
-    if(q&&(i.name+" "+i.whole).toLowerCase().indexOf(q)<0)return false;
-    return true;
-  }).sort(function(a,b){return a.exp<b.exp?-1:1});
+  function qok(i){return !q||(i.name+" "+i.whole).toLowerCase().indexOf(q)>=0}
   var h="";
-  rows.forEach(function(it){
-    var l=level(it), cls=l==="expired"?"red":l, label;
-    if(l==="done")label=["gray","Returned or finished"];
-    else if(l==="expired")label=["red","Expired"];
-    else if(l==="red")label=["red","Return now"];
-    else if(l==="amb")label=["amb","Near expiry"];
-    else label=["ok","Safe for now"];
-    h+='<div class="item '+(l==="done"?"":cls)+'"><h3>'+esc(it.name)+'</h3>'+
-      '<div class="meta">Expiry: '+fmt(it.exp)+(l==="done"?"":" ("+left(it)+")")+'</div>'+
-      '<div class="meta">Qty: '+esc(it.qty||"-")+(it.batch?" | Batch: "+esc(it.batch):"")+'</div>'+
-      '<div class="meta">Wholesaler: '+esc(it.whole||"-")+'</div>'+
-      '<div class="meta">Bought: '+(fmt(it.pdate)||"-")+(it.ptime?" at "+esc(it.ptime):"")+'</div>'+
-      (it.note?'<div class="meta">Note: '+esc(it.note)+'</div>':"")+
-      '<span class="badge '+label[0]+'">'+label[1]+'</span>'+
-      '<div class="row">'+
-      (it.done?'<button class="btn" data-a="undo" data-id="'+it.id+'">Move back</button>':'<button class="btn p" data-a="done" data-id="'+it.id+'">Mark returned</button>')+
-      '<button class="btn" data-a="edit" data-id="'+it.id+'">Edit</button>'+
-      '<button class="btn d" data-a="del" data-id="'+it.id+'">Delete</button></div></div>';
-  });
-  if(!h){
-    h='<div class="empty">'+(tab==="alert"?"No alerts. Nothing is close to expiry.":tab==="done"?"No returned items yet.":"No medicines added yet. Tap Add medicine.")+'</div>';
+  if(tab==="wh"){
+    var g={};
+    al.filter(qok).forEach(function(i){var k=i.whole||"No wholesaler";(g[k]=g[k]||[]).push(i)});
+    Object.keys(g).sort().forEach(function(k){
+      var arr=g[k].sort(sortExp),tv=0;arr.forEach(function(i){tv+=val(i)});
+      h+='<div class="grp"><h2>'+esc(k)+'</h2><div class="meta">'+arr.length+' medicines'+(tv?" | Value "+rs(tv):"")+'</div><div class="row"><button class="btn p" data-g="wa" data-w="'+esc(k)+'">Send on WhatsApp</button><button class="btn" data-g="cp" data-w="'+esc(k)+'">Copy list</button></div></div>';
+      arr.forEach(function(i){h+=card(i)});
+    });
+    if(!h)h='<div class="empty">Nothing to return right now.</div>';
+  }else{
+    var rows=items.filter(function(i){
+      if(tab==="done"&&!i.done)return false;
+      if(tab!=="done"&&i.done)return false;
+      if(tab==="alert"&&!isAlert(i))return false;
+      return qok(i);
+    }).sort(sortExp);
+    rows.forEach(function(i){h+=card(i)});
+    if(!h)h='<div class="empty">'+(tab==="alert"?"No alerts. Nothing is close to expiry.":tab==="done"?"Nothing here yet.":"No medicines added yet. Tap Add medicine.")+'</div>';
   }
   $("list").innerHTML=h;
   var ws={};items.forEach(function(i){if(i.whole)ws[i.whole]=1});
   $("wlist").innerHTML=Object.keys(ws).map(function(w){return '<option value="'+esc(w)+'">'}).join("");
+  var wh="";
+  Object.keys(ws).sort().forEach(function(w){
+    var c=st.whs[w]||{};
+    var opts='<option value="">Default ('+st.near+')</option>'+[2,3,4,5,6].map(function(m){return '<option value="'+m+'"'+(+c.months===m?" selected":"")+'>'+m+' months</option>'}).join("");
+    wh+='<div class="wsrow"><b>'+esc(w)+'</b><label>Takes returns up to (before expiry)<select data-ws="'+esc(w)+'" data-f="months">'+opts+'</select></label><label>WhatsApp number<input data-ws="'+esc(w)+'" data-f="phone" type="tel" inputmode="tel" value="'+esc(c.phone||"")+'" placeholder="10-digit number"></label></div>';
+  });
+  $("wsList").innerHTML=wh||'<p class="meta">Wholesalers appear here after you add medicines.</p>';
 }
 function openForm(it){
   editId=it?it.id:null;
   $("formTitle").textContent=it?"Edit medicine":"Add medicine";
   $("f-name").value=it?it.name:"";$("f-qty").value=it?it.qty:"";$("f-batch").value=it?it.batch:"";
-  $("f-exp").value=it?it.exp:"";$("f-whole").value=it?it.whole:"";
-  var n=new Date(),pad=function(x){return String(x).padStart(2,"0")};
-  $("f-pdate").value=it?it.pdate:n.getFullYear()+"-"+pad(n.getMonth()+1)+"-"+pad(n.getDate());
+  $("f-exp").value=it?it.exp.slice(0,7):"";$("f-whole").value=it?it.whole:"";
+  $("f-mrp").value=it&&it.mrp?it.mrp:"";$("f-rate").value=it&&it.rate?it.rate:"";
+  var n=new Date();
+  $("f-pdate").value=it?it.pdate:todayIso();
   $("f-ptime").value=it?it.ptime:pad(n.getHours())+":"+pad(n.getMinutes());
   $("f-note").value=it?it.note:"";$("formErr").textContent="";
   $("sheet").className="sheet show";window.scrollTo(0,0);
 }
 function closeForm(){$("sheet").className="sheet"}
 function saveForm(){
-  var name=$("f-name").value.trim(), exp=$("f-exp").value;
+  var name=$("f-name").value.trim(), m=$("f-exp").value;
   if(!name){$("formErr").textContent="Enter the medicine name.";return}
-  if(!exp){$("formErr").textContent="Pick the expiry date.";return}
-  var o={name:name,qty:$("f-qty").value,batch:$("f-batch").value.trim(),exp:exp,whole:$("f-whole").value.trim(),pdate:$("f-pdate").value,ptime:$("f-ptime").value,note:$("f-note").value.trim()};
+  if(!m){$("formErr").textContent="Pick the expiry month and year.";return}
+  var p=m.split("-"), last=new Date(+p[0],+p[1],0).getDate(), exp=p[0]+"-"+p[1]+"-"+pad(last);
+  var o={name:name,qty:$("f-qty").value,batch:$("f-batch").value.trim(),exp:exp,mrp:$("f-mrp").value,rate:$("f-rate").value,whole:$("f-whole").value.trim(),pdate:$("f-pdate").value,ptime:$("f-ptime").value,note:$("f-note").value.trim()};
   if(editId){items=items.map(function(i){return i.id===editId?Object.assign(i,o):i})}
   else{o.id="p"+Date.now();o.done=false;items.push(o)}
   save();closeForm();render();
 }
 function copyText(t,ok){
-  function fb(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");$("msg").textContent=ok}catch(e){$("msg").textContent="Could not copy. Long-press to copy manually."}document.body.removeChild(ta)}
+  function fb(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");$("msg").textContent=ok}catch(e){$("msg").textContent="Could not copy."}document.body.removeChild(ta)}
   try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){$("msg").textContent=ok},fb)}else fb()}catch(e){fb()}
 }
+function find(id){return items.filter(function(i){return i.id===id})[0]}
 $("list").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;
+  var g=b.getAttribute("data-g");
+  if(g){
+    var w=b.getAttribute("data-w");
+    var arr=items.filter(function(i){return !i.done&&isAlert(i)&&(i.whole||"No wholesaler")===w}).sort(sortExp);
+    var txt=listText(arr,w==="No wholesaler"?"":w);
+    if(g==="cp"){copyText(txt,"List copied.");alert("List copied.");return}
+    var c=st.whs[w]||{},ph=String(c.phone||"").replace(/\D/g,"");
+    if(ph.length===10)ph="91"+ph;
+    window.open("https://wa.me/"+ph+"?text="+encodeURIComponent(txt),"_blank");
+    return;
+  }
   var id=b.getAttribute("data-id"),a=b.getAttribute("data-a");
-  var it=items.filter(function(i){return i.id===id})[0];if(!it)return;
-  if(a==="done"){it.done=true;save();render()}
-  else if(a==="undo"){it.done=false;save();render()}
+  var it=find(id);if(!it)return;
+  if(a==="ret"){retId=id;$("rName").textContent=it.name;$("r-date").value=todayIso();$("r-credit").value="Waiting";$("r-amt").value=it.rate&&it.qty?Math.round(val(it)):"";$("rsheet").className="sheet show";window.scrollTo(0,0)}
+  else if(a==="sold"){
+    var n=prompt("How many strips sold?","1");if(n===null)return;
+    n=parseInt(n,10);if(!(n>0))return;
+    it.qty=Math.max(0,(+it.qty||0)-n);
+    if(it.qty<=0){it.done=true;it.soldOut=true}
+    save();render();
+  }
+  else if(a==="undo"){it.done=false;it.soldOut=false;it.ret=null;save();render()}
   else if(a==="edit"){openForm(it)}
   else if(a==="del"){if(confirm("Delete "+it.name+"?")){items=items.filter(function(i){return i.id!==id});save();render()}}
 });
+$("rSave").onclick=function(){
+  var it=find(retId);if(!it)return;
+  it.done=true;it.soldOut=false;it.ret={date:$("r-date").value||todayIso(),credit:$("r-credit").value,amt:$("r-amt").value};
+  save();$("rsheet").className="sheet";render();
+};
+$("rCancel").onclick=function(){$("rsheet").className="sheet"};
+$("wsList").addEventListener("change",function(e){
+  var t=e.target,w=t.getAttribute("data-ws");if(!w)return;
+  var c=st.whs[w]=st.whs[w]||{};c[t.getAttribute("data-f")]=t.value;save();render();
+});
 $("t-alert").onclick=function(){tab="alert";render()};
+$("t-wh").onclick=function(){tab="wh";render()};
 $("t-all").onclick=function(){tab="all";render()};
 $("t-done").onclick=function(){tab="done";render()};
 $("q").oninput=render;
@@ -233,21 +331,21 @@ $("saveBtn").onclick=saveForm;
 $("setNear").onchange=function(){st.near=+this.value;save();render()};
 $("setUrg").onchange=function(){st.urg=+this.value;save();render()};
 $("copyAlerts").onclick=function(){
-  var r=items.filter(function(i){var l=level(i);return l==="red"||l==="amb"||l==="expired"}).sort(function(a,b){return a.exp<b.exp?-1:1});
+  var r=items.filter(function(i){return !i.done&&isAlert(i)}).sort(sortExp);
   if(!r.length){$("msg").textContent="No alerts to copy.";return}
-  copyText(r.map(function(i){return "Return "+i.name+" ("+(i.qty||"?")+") to "+(i.whole||"wholesaler")+" - expiry "+fmt(i.exp)}).join("\n"),"Alert list copied.");
+  copyText(listText(r,""),"Alert list copied.");
 };
 $("copyBackup").onclick=function(){copyText(JSON.stringify({items:items,st:st}),"Backup copied. Save it in Notes.")};
 $("restoreBtn").onclick=function(){
   try{var d=JSON.parse($("restoreTxt").value);if(!d||!Array.isArray(d.items))throw 0;
     if(!confirm("Replace current data with this backup?"))return;
-    items=d.items;if(d.st)st=Object.assign(st,d.st);save();render();$("setNear").value=st.near;$("setUrg").value=st.urg;$("msg").textContent="Backup restored."}
+    items=d.items;if(d.st)st=Object.assign(st,d.st);if(!st.whs)st.whs={};save();$("setNear").value=st.near;$("setUrg").value=st.urg;render();$("msg").textContent="Backup restored."}
   catch(e){$("msg").textContent="This backup text is not valid."}
 };
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")}catch(e){}
 load();
-if(!items.length){idbGet(function(v){if(!v)return;try{var d=JSON.parse(v);if(d&&d.items&&d.items.length){items=d.items;if(d.st)st=Object.assign(st,d.st);save();$("setNear").value=st.near;$("setUrg").value=st.urg;render()}}catch(e){}})}
+if(!items.length){idbGet(function(v){if(!v)return;try{var d=JSON.parse(v);if(d&&d.items&&d.items.length){items=d.items;if(d.st)st=Object.assign(st,d.st);if(!st.whs)st.whs={};save();$("setNear").value=st.near;$("setUrg").value=st.urg;render()}}catch(e){}})}
 $("setNear").value=st.near;$("setUrg").value=st.urg;render();
 })();
 </script>
